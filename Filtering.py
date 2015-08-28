@@ -6,10 +6,8 @@ Created on Thu Aug  6 15:44:39 2015
 """
 #Ipmort nessesaru packages
 import numpy as np
-#import scipy as sp
 import statsmodels.api as sm
 import matplotlib
-matplotlib.use('TkAgg')    #*
 import matplotlib.pyplot as plt
 import pandas as pd 
 from tkinter import *
@@ -90,9 +88,6 @@ def plot_series(X,X_name,time, hp_trend, hp_cycle, lambda_hp, X_hp,diff, diff2, 
         plot_bp.set_xticklabels([])
         #
         plt.tight_layout()   
-        canvas = FigureCanvasTkAgg(figure, master=root)
-        plot_widget = canvas.get_tk_widget()
-        plot_widget.grid(row=0, column=0)        
         return figure
         
 #Run the code
@@ -132,17 +127,14 @@ def run(entries):
     else: band_pass=0    
     #Plot all series    
     final_plot = plot_series(X,X_name,time, hp_trend, hp_cycle, lambda_hp, X_hp, diff, diff2, band_pass)
-    #final_plot.show()
-    final_plot.canvas.draw()
+    final_plot.show()
+    
     
 #Make the frame 
 if __name__ == '__main__':
    root = Tk()
    Label(root, text="Quick Data Filtering with Standard Parameters").pack()
-   #button_opt = {'fill': Tkconstants.BOTH, 'padx': 5, 'pady': 5}   
-   #Tkinter.Button(self, text='askopenfilename', command=self.askopenfilename).pack(**button_opt) 
    ents = makeform(root, fields)
-   #root.bind('<Return>', (lambda event, e=ents: fetch(e)))   
    b0 = Button(root, text='Choose Data File', 
           command=(lambda e=ents: enter_file(e)))   
    b0.pack(side=TOP, padx=5, pady=5)
@@ -155,7 +147,7 @@ if __name__ == '__main__':
           command=(lambda e=ents: run(e)))
    b1.pack(side=LEFT, padx=5, pady=5)
    b2 = Button(root, text='Quit', command=root.destroy)
-   b2.pack(side=LEFT, padx=5, pady=5)
+   b2.pack(side=LEFT, padx=5, pady=5)   
+   b3 = Button(root, text='Show', command=root.quit)   
    root.mainloop()
-   
-        
+      
