@@ -3,6 +3,7 @@
 Created on Thu Aug  6 15:44:39 2015
 
 @author: Днс
+
 """
 
 import numpy as np
@@ -11,10 +12,6 @@ import matplotlib.pyplot as plt
 from tkinter import *
 from tkinter.filedialog import askopenfilename
 from numpy import *
-
-
-# Ask for a data series and parameters
-fields = ('Variable Name', 'Data File')
 
 
 def makeform(root, fields):
@@ -139,7 +136,7 @@ def run(entries):
 if __name__ == '__main__':
     root = Tk()
     Label(root, text="Quick Data Filtering with Standard Parameters").pack()
-    ents = makeform(root, fields)
+    ents = makeform(root, fields=('Variable Name', 'Data File'))
     b0 = Button(root, text='Choose Data File', command=(lambda e=ents: enter_file(e)))
     b0.pack(side=TOP, padx=5, pady=5)
     freq = Checkbar(root, ['Quarterly', 'Annual'])
