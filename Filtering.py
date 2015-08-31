@@ -8,9 +8,13 @@ Created on Thu Aug  6 15:44:39 2015
 
 import numpy as np
 import statsmodels.api as sm
-import matplotlib.pyplot as plt
 import tkinter as tk
 from tkinter.filedialog import askopenfilename
+
+import matplotlib
+matplotlib.use('TkAgg')
+
+import matplotlib.pyplot as plt
 
 
 def makeform(root, fields):
