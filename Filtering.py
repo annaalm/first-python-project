@@ -9,34 +9,33 @@ Created on Thu Aug  6 15:44:39 2015
 import numpy as np
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
-from tkinter import *
+import tkinter as tk
 from tkinter.filedialog import askopenfilename
-from numpy import *
 
 
 def makeform(root, fields):
     entries = {}
     for field in fields:
-        row = Frame(root)
-        lab = Label(row, width=22, text=field + ": ", anchor='w')
-        ent = Entry(row)
+        row = tk.Frame(root)
+        lab = tk.Label(row, width=22, text=field + ": ", anchor='w')
+        ent = tk.Entry(row)
         ent.insert(0, "")
-        row.pack(side=TOP, fill=X, padx=5, pady=5)
-        lab.pack(side=LEFT)
-        ent.pack(side=RIGHT, expand=YES, fill=X)
+        row.pack(side=tk.TOP, fill=tk.X, padx=5, pady=5)
+        lab.pack(side=tk.LEFT)
+        ent.pack(side=tk.RIGHT, expand=tk.YES, fill=tk.X)
         entries[field] = ent
     return entries
 
 
-class Checkbar(Frame):
+class Checkbar(tk.Frame):
 
-    def __init__(self, parent=None, picks=[], side=LEFT, anchor=W):
-        Frame.__init__(self, parent)
+    def __init__(self, parent=None, picks=[], side=tk.LEFT, anchor=tk.W):
+        tk.Frame.__init__(self, parent)
         self.vars = []
         for pick in picks:
-            var = IntVar()
-            chk = Checkbutton(self, text=pick, variable=var)
-            chk.pack(side=side, anchor=anchor, expand=YES)
+            var = tk.IntVar()
+            chk = tk.Checkbutton(self, text=pick, variable=var)
+            chk.pack(side=side, anchor=anchor, expand=tk.YES)
             self.vars.append(var)
 
     def state(self):
@@ -44,10 +43,10 @@ class Checkbar(Frame):
 
 
 def enter_file(entries):
-    Tk().withdraw()
+    tk.Tk().withdraw()
     # show an "Open" dialog box and return the path to the selected file
     filename = askopenfilename()
-    entries['Data File'].delete(0, END)
+    entries['Data File'].delete(0, tk.END)
     entries['Data File'].insert(0, filename)
     return filename
 
@@ -87,7 +86,7 @@ def plot_series(X, X_name, time, hp_trend, hp_cycle, lambda_hp, X_hp, diff, diff
     plot_bp.set_xticklabels([])
 
     plt.tight_layout()
-    return figure
+    plt.show()
 
 
 def run(entries):
@@ -95,7 +94,7 @@ def run(entries):
     X_name = entries['Variable Name'].get()
     filename = str(entries['Data File'].get())
     # Open the data file (the file must be closed)
-    time, X = loadtxt(filename, unpack=True)
+    time, X = np.loadtxt(filename, unpack=True)
     filters = list(filt.state())
 
     # HP Filter
@@ -128,25 +127,25 @@ def run(entries):
         band_pass = 0
 
     # Plot all series
-    final_plot = plot_series(
-        X, X_name, time, hp_trend, hp_cycle, lambda_hp, X_hp, diff, diff2, band_pass)
-    final_plot.show()
+    plot_series(
+        X, X_name, time, hp_trend, hp_cycle, lambda_hp, X_hp, diff, diff2, band_pass
+    )
 
 
 if __name__ == '__main__':
-    root = Tk()
-    Label(root, text="Quick Data Filtering with Standard Parameters").pack()
+    root = tk.Tk()
+    tk.Label(root, text="Quick Data Filtering with Standard Parameters").pack()
     ents = makeform(root, fields=('Variable Name', 'Data File'))
-    b0 = Button(root, text='Choose Data File', command=(lambda e=ents: enter_file(e)))
-    b0.pack(side=TOP, padx=5, pady=5)
+    b0 = tk.Button(root, text='Choose Data File', command=(lambda e=ents: enter_file(e)))
+    b0.pack(side=tk.TOP, padx=5, pady=5)
     freq = Checkbar(root, ['Quarterly', 'Annual'])
     filt = Checkbar(root, ['HP', 'First Differences', 'Band-Pass'])
-    filt.pack(side=TOP, fill=X)
-    freq.pack(side=LEFT)
-    filt.config(relief=GROOVE, bd=2)
-    b1 = Button(root, text='Run', command=(lambda e=ents: run(e)))
-    b1.pack(side=LEFT, padx=5, pady=5)
-    b2 = Button(root, text='Quit', command=root.destroy)
-    b2.pack(side=LEFT, padx=5, pady=5)
-    b3 = Button(root, text='Show', command=root.quit)
+    filt.pack(side=tk.TOP, fill=tk.X)
+    freq.pack(side=tk.LEFT)
+    filt.config(relief=tk.GROOVE, bd=2)
+    b1 = tk.Button(root, text='Run', command=(lambda e=ents: run(e)))
+    b1.pack(side=tk.LEFT, padx=5, pady=5)
+    b2 = tk.Button(root, text='Quit', command=root.destroy)
+    b2.pack(side=tk.LEFT, padx=5, pady=5)
+    b3 = tk.Button(root, text='Show', command=root.quit)
     root.mainloop()
