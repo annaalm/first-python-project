@@ -4,22 +4,17 @@ Created on Thu Aug  6 15:44:39 2015
 
 @author: Днс
 """
-# Ipmort nessesaru packages
+
 import numpy as np
 import statsmodels.api as sm
-import matplotlib
 import matplotlib.pyplot as plt
-import pandas as pd
 from tkinter import *
-#import tkinter as Tk
 from tkinter.filedialog import askopenfilename
 from numpy import *
 
 
 # Ask for a data series and parameters
 fields = ('Variable Name', 'Data File')
-
-# get variables entries
 
 
 def makeform(root, fields):
@@ -83,21 +78,19 @@ def plot_series(X, X_name, time, hp_trend, hp_cycle, lambda_hp, X_hp, diff, diff
     plot_diff.plot(diff, 'g')
     plot_diff.set_title('First Differences')
     plot_diff.set_xticklabels([])
-# Second differences
+    # Second differences
     plot_diff2 = figure.add_subplot(3, 2, 6)
     plot_diff2.plot(diff2, 'g')
     plot_diff2.set_title('Second Differences')
     plot_diff2.set_xticklabels([])
-# Band-Pass Filter
+    # Band-Pass Filter
     plot_bp = figure.add_subplot(3, 2, 2)
     plot_bp.plot(band_pass, 'g')
     plot_bp.set_title('Band-Pass Filter ')
     plot_bp.set_xticklabels([])
-    #
+
     plt.tight_layout()
     return figure
-
-# Run the code
 
 
 def run(entries):
@@ -107,7 +100,7 @@ def run(entries):
     # Open the data file (the file must be closed)
     time, X = loadtxt(filename, unpack=True)
     filters = list(filt.state())
-    #
+
     # HP Filter
     frequency = list(freq.state())
     quarterly = frequency[0]
@@ -122,7 +115,7 @@ def run(entries):
         hp_cycle = 0
         hp_trend = 0
         X_hp = 0
-    #
+
     # First and second differences
     if filters[1] != 0:
         diff = np.diff(X, axis=0)
@@ -130,33 +123,31 @@ def run(entries):
     else:
         diff = 0
         diff2 = 0
-    #
+
     # Band-pass
     if filters[2] != 0:
         band_pass = sm.tsa.filters.bkfilter(X, low=6, high=24, K=12)
     else:
         band_pass = 0
+
     # Plot all series
     final_plot = plot_series(
         X, X_name, time, hp_trend, hp_cycle, lambda_hp, X_hp, diff, diff2, band_pass)
     final_plot.show()
 
 
-# Make the frame
 if __name__ == '__main__':
     root = Tk()
     Label(root, text="Quick Data Filtering with Standard Parameters").pack()
     ents = makeform(root, fields)
-    b0 = Button(root, text='Choose Data File',
-                command=(lambda e=ents: enter_file(e)))
+    b0 = Button(root, text='Choose Data File', command=(lambda e=ents: enter_file(e)))
     b0.pack(side=TOP, padx=5, pady=5)
     freq = Checkbar(root, ['Quarterly', 'Annual'])
     filt = Checkbar(root, ['HP', 'First Differences', 'Band-Pass'])
     filt.pack(side=TOP, fill=X)
     freq.pack(side=LEFT)
     filt.config(relief=GROOVE, bd=2)
-    b1 = Button(root, text='Run',
-                command=(lambda e=ents: run(e)))
+    b1 = Button(root, text='Run', command=(lambda e=ents: run(e)))
     b1.pack(side=LEFT, padx=5, pady=5)
     b2 = Button(root, text='Quit', command=root.destroy)
     b2.pack(side=LEFT, padx=5, pady=5)
